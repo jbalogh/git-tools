@@ -1,0 +1,12 @@
+#!/bin/sh
+# What bug is this branch for?
+BUG=$(git here | cut -d- -f1)
+
+# Check if there's really a bug
+echo $BUG | grep -q '^[0-9]\+$'
+
+if ([ 0 -eq $? ]); then
+    echo $BUG
+else
+    exit 1
+fi
