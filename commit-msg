@@ -1,0 +1,19 @@
+#!/usr/bin/env python
+# $1 is the path to the file containing the commit message.
+
+import sys
+import subprocess
+
+def call(cmd):
+    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+    return p.communicate()[0]
+
+FILE = sys.argv[1]
+BUG = call('git bug').strip()
+
+message = open(FILE).read()
+
+if not message.startswith('bug') and BUG:
+    message = 'bug %s, %s' % (BUG, message)
+
+open(FILE, 'w').write(message)
