@@ -1,0 +1,3 @@
+#!/bin/sh
+# What branch am I on?
+echo $(git-symbolic-ref HEAD | cut -d/ -f3)

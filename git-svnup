@@ -1,0 +1,2 @@
+#!/bin/sh
+H=$(git here) && git checkout master && git svn rebase && git checkout $H && git rebase master
