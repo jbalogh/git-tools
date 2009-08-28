@@ -1,0 +1,12 @@
+#!/bin/sh
+# What bug is this branch for?
+BUG=$(git bug)
+
+# Check if there's really a bug
+echo $BUG | grep -q '^[0-9]\+$'
+
+if ([ 0 -eq $? ]); then
+    open https://bugzilla.mozilla.org/show_bug.cgi?id=$BUG
+else
+    exit 1
+fi
