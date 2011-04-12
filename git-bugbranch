@@ -1,0 +1,13 @@
+#!/bin/sh
+
+BUG=$1
+
+if [[ -z $BUG ]]; then
+    echo "Bug number is required" >&2
+    exit 1
+fi
+JSON=$(curl -s https://api-dev.bugzilla.mozilla.org/latest/bug/$BUG\?include_fields\=summary)
+TITLE=$(echo $JSON|cut -d\" -f4)
+SLUG=$(echo $TITLE|tr '[A-Z]' '[a-z']|tr ' ' '-')
+
+git co -b $BUG-$SLUG
