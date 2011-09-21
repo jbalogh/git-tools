@@ -9,4 +9,4 @@ fi
 JSON=$(curl -s https://api-dev.bugzilla.mozilla.org/latest/bug/$BUG\?include_fields\=summary)
 TITLE=$(echo $JSON|python -c "import sys, json;print json.loads(sys.stdin.read())['summary']")
 SLUG=$(echo $TITLE|tr '[A-Z]' '[a-z']|tr ' ' '-'|tr -d '"'|cut -c1-20)
-git co -b $BUG-$SLUG
+git checkout -b $BUG-$SLUG
