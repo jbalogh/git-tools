@@ -1,12 +1,21 @@
-#!/bin/sh
+#!/usr/bin/env python
 
-BUG=$1
+import sys
+import json
+import re
+import urllib
+from subprocess import call
 
-if [[ -z $BUG ]]; then
-    echo "Bug number is required" >&2
-    exit 1
-fi
-JSON=$(curl -s https://api-dev.bugzilla.mozilla.org/latest/bug/$BUG\?include_fields\=summary)
-TITLE=$(echo $JSON|python -c "import sys, json;print json.loads(sys.stdin.read())['summary']")
-SLUG=$(echo $TITLE|tr '[A-Z]' '[a-z']|tr ' ' '-'|tr -d '"'|cut -c1-20)
-git checkout -b $BUG-$SLUG
+if len(sys.argv) < 2:
+    sys.stderr.write("Bug number is required\n")
+    sys.exit(1)
+
+BUG = sys.argv[1]
+url = ('https://api-dev.bugzilla.mozilla.org/latest/bug/' +  BUG +
+       '?include_fields=summary')
+JSON = urllib.urlopen(url).read()
+TITLE = json.loads(JSON)['summary']
+parts = [BUG] + re.split(r"""[ -:,\'\"]+""", TITLE.lower())
+SLUG = '-'.join(parts[:4])
+
+call("git co -b %s" % SLUG, shell=True)
